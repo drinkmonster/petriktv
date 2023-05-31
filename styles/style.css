@@ -1,0 +1,22 @@
+body {
+    background-color: #7bdcb5;
+}
+
+.petriklogo {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.fejlec {
+    margin-top: 20px;
+}
+
+.ido {
+    font-size: 15vw;
+}
+
+.ptvtext {
+    font-weight: bold;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
