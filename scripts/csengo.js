@@ -31,12 +31,15 @@ function updateTime() {
     const classEndTime = getClassEndTime(currentClass);
     const timeRemaining = getTimeRemaining(currentTime, classEndTime);
     csengoig.innerText = `A kicsengőig ${timeRemaining} perc`;
+    oraszam.innerText = currentClass + ". óra";
   } else if (nextClass) {
     const nextClassStartTime = getNextClassStartTime(nextClass);
     const timeRemaining = getTimeRemaining(currentTime, nextClassStartTime);
     csengoig.innerText = `A becsengőig ${timeRemaining} perc`;
+    oraszam.innerText = nextClass + ". óra";
   } else {
     csengoig.innerText = "Jelenleg nincs óra.";
+    oraszam.innerText = "";
   }
 }
 
