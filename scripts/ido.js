@@ -6,6 +6,6 @@ function updateTime() {
     const seconds = currentTime.getSeconds().toString().padStart(2, '0');
     const formattedTime = `${hours}:${minutes}:${seconds}`;
     header.innerText = formattedTime;
-  }
+}
 
-  setInterval(updateTime, 1000);
+setInterval(updateTime, 1000);
