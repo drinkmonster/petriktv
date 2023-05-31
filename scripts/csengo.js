@@ -26,7 +26,7 @@ function updateTime() {
   const nextClass = getNextClass(currentHour, currentMinute);
   const csengoig = document.getElementById('csengoig');
   const oraszam = document.getElementById('oraszam');
-  
+
   if (currentClass) {
     const classEndTime = getClassEndTime(currentClass);
     const timeRemaining = getTimeRemaining(currentTime, classEndTime);
@@ -47,47 +47,47 @@ function getClass(hour, minute) {
     if (
       hour > classStartTime.startHour ||
       (hour === classStartTime.startHour && minute >= classStartTime.startMinute)
+    ) {
+      if (
+        hour < classStartTime.endHour ||
+        (hour === classStartTime.endHour && minute < classStartTime.endMinute)
       ) {
-        if (
-          hour < classStartTime.endHour ||
-          (hour === classStartTime.endHour && minute < classStartTime.endMinute)
-          ) {
-            return classStartTime;
-          }
-        }
+        return classStartTime;
       }
-      
-      return null;
     }
-    
-    function getNextClass(hour, minute) {
-      for (let i = 0; i < timetable.length; i++) {
-        const classStartTime = timetable[i];
-        if (
-          hour < classStartTime.startHour ||
-          (hour === classStartTime.startHour && minute < classStartTime.startMinute)
-          ) {
-            return classStartTime;
-          }
-        }
-        
-        return null;
-      }
-      
-      function getClassEndTime(classTime) {
-        const { endHour, endMinute } = classTime;
-        return new Date().setHours(endHour, endMinute);
-      }
-      
-      function getNextClassStartTime(classTime) {
-        const { startHour, startMinute } = classTime;
-        return new Date().setHours(startHour, startMinute);
-      }
-      
-      function getTimeRemaining(startTime, endTime) {
-        const differenceInMinutes = Math.floor((endTime - startTime) / (1000 * 60));
-        return differenceInMinutes;
-      }
-      
-      // Call updateTime every second to keep the text updated
-      setInterval(updateTime, 1000);
+  }
+
+  return null;
+}
+
+function getNextClass(hour, minute) {
+  for (let i = 0; i < timetable.length; i++) {
+    const classStartTime = timetable[i];
+    if (
+      hour < classStartTime.startHour ||
+      (hour === classStartTime.startHour && minute < classStartTime.startMinute)
+    ) {
+      return classStartTime;
+    }
+  }
+
+  return null;
+}
+
+function getClassEndTime(classTime) {
+  const { endHour, endMinute } = classTime;
+  return new Date().setHours(endHour, endMinute);
+}
+
+function getNextClassStartTime(classTime) {
+  const { startHour, startMinute } = classTime;
+  return new Date().setHours(startHour, startMinute);
+}
+
+function getTimeRemaining(startTime, endTime) {
+  const differenceInMinutes = Math.floor((endTime - startTime) / (1000 * 60));
+  return differenceInMinutes;
+}
+
+// Call updateTime every second to keep the text updated
+setInterval(updateTime, 1000);
