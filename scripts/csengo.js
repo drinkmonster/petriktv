@@ -9,6 +9,7 @@ const timetable = [
   { startHour: 13, startMinute: 40, endHour: 14, endMinute: 25 },
   { startHour: 14, startMinute: 30, endHour: 15, endMinute: 15 },
   { startHour: 15, startMinute: 20, endHour: 16, endMinute: 0 },
+  { startHour: 16, startMinute: 0, endHour: 16, endMinute: 40 },
   { startHour: 16, startMinute: 45, endHour: 17, endMinute: 25 },
   { startHour: 17, startMinute: 30, endHour: 18, endMinute: 10 },
   { startHour: 18, startMinute: 15, endHour: 18, endMinute: 55 },
@@ -24,6 +25,7 @@ function updateTime() {
   const currentClass = getClass(currentHour, currentMinute);
   const nextClass = getNextClass(currentHour, currentMinute);
   const csengoig = document.getElementById('csengoig');
+  const oraszam = document.getElementById('oraszam');
   
   if (currentClass) {
     const classEndTime = getClassEndTime(currentClass);
@@ -41,6 +43,7 @@ function updateTime() {
 function getClass(hour, minute) {
   for (let i = 0; i < timetable.length; i++) {
     const classStartTime = timetable[i];
+    oraszam.innerText = i;
     if (
       hour > classStartTime.startHour ||
       (hour === classStartTime.startHour && minute >= classStartTime.startMinute)
