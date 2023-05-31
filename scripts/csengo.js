@@ -43,7 +43,7 @@ function updateTime() {
 function getClass(hour, minute) {
   for (let i = 0; i < timetable.length; i++) {
     const classStartTime = timetable[i];
-    oraszam.innerText = i;
+    oraszam.innerText = i + ". óra";
     if (
       hour > classStartTime.startHour ||
       (hour === classStartTime.startHour && minute >= classStartTime.startMinute)
