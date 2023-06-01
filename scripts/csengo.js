@@ -22,24 +22,24 @@ function updateElements() {
   function formatTime(hours, minutes) {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   }
-  
-  const currentTime = new Date();
-  const currentHour = currentTime.getHours();
-  const currentMinute = currentTime.getMinutes();
-  
+
+  const currentHour = new Date().getHours();
+  const currentMinute = new Date().getMinutes();
+
   let currentEvent = null;
   let nextEvent = null;
   let isBreak = false;
-  
+
   for (let i = 0; i < timetable.length; i++) {
     const { startHour, startMinute, endHour, endMinute } = timetable[i];
+    const currentTime = new Date();
     const startTime = new Date();
     startTime.setHours(startHour);
     startTime.setMinutes(startMinute);
     const endTime = new Date();
     endTime.setHours(endHour);
     endTime.setMinutes(endMinute);
-  
+
     if (currentTime >= startTime && currentTime < endTime) {
       currentEvent = i;
       isBreak = false;
@@ -50,21 +50,22 @@ function updateElements() {
       break;
     }
   }
-  
+
   const oraszamElement = document.getElementById('oraszam');
-  
+
   if (currentEvent !== null) {
-    oraszamElement.textContent = `${currentEvent}. óra`;
+    oraszamElement.textContent = `${currentEvent + 1}. óra`;
   } else if (nextEvent !== null) {
     oraszamElement.textContent = 'Szünet';
   } else {
     oraszamElement.style.display = 'none';
   }
-  
+
   const csengoigElement = document.getElementById('csengoig');
-  
+
   if (currentEvent !== null) {
     const { endHour, endMinute } = timetable[currentEvent];
+    const currentTime = new Date();
     const endTime = new Date();
     endTime.setHours(endHour);
     endTime.setMinutes(endMinute);
@@ -73,6 +74,7 @@ function updateElements() {
     csengoigElement.textContent = `${minutesRemaining} perc múlva ér véget`;
   } else if (nextEvent !== null) {
     const { startHour, startMinute } = timetable[nextEvent];
+    const currentTime = new Date();
     const startTime = new Date();
     startTime.setHours(startHour);
     startTime.setMinutes(startMinute);
@@ -81,7 +83,9 @@ function updateElements() {
     csengoigElement.textContent = `${minutesRemaining} perc múlva kezdődik`;
   } else {
     csengoigElement.textContent = 'Nincs több óra ma.';
-  } 
+  }
 }
+
+updateElements();
 
 setInterval(updateElements, 1000);
