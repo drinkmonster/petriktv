@@ -13,83 +13,71 @@ const timetable = [
   { startHour: 16, startMinute: 45, endHour: 17, endMinute: 25 },
   { startHour: 17, startMinute: 30, endHour: 18, endMinute: 10 },
   { startHour: 18, startMinute: 15, endHour: 18, endMinute: 55 },
-  { startHour: 19, startMinute: 00, endHour: 19, endMinute: 40 },
+  { startHour: 19, startMinute: 0, endHour: 19, endMinute: 40 },
   { startHour: 19, startMinute: 45, endHour: 20, endMinute: 25 },
-  { startHour: 20, startMinute: 30, endHour: 21, endMinute: 10 },
+  { startHour: 20, startMinute: 30, endHour: 21, endMinute: 10 }
 ];
 
-function updateTime() {
-  const currentTime = new Date();
-  const currentHour = currentTime.getHours();
-  const currentMinute = currentTime.getMinutes();
-  const currentClass = getClass(currentHour, currentMinute);
-  const nextClass = getNextClass(currentHour, currentMinute);
-  const csengoig = document.getElementById('csengoig');
-  const oraszam = document.getElementById('oraszam');
+function formatTime(hours, minutes) {
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
 
-  if (currentClass) {
-    const classEndTime = getClassEndTime(currentClass);
-    const timeRemaining = getTimeRemaining(currentTime, classEndTime);
-    csengoig.innerText = `A kicsengőig ${timeRemaining} perc`;
-  } else if (nextClass) {
-    const nextClassStartTime = getNextClassStartTime(nextClass);
-    const timeRemaining = getTimeRemaining(currentTime, nextClassStartTime);
-    csengoig.innerText = `A becsengőig ${timeRemaining} perc`;
-    oraszam.innerText = nextClass + ". óra";
-  } else {
-    csengoig.innerText = "Jelenleg nincs óra.";
-    oraszam.innerText = "";
+const currentTime = new Date();
+const currentHour = currentTime.getHours();
+const currentMinute = currentTime.getMinutes();
+
+let currentEvent = null;
+let nextEvent = null;
+let isBreak = false;
+
+for (let i = 0; i < timetable.length; i++) {
+  const { startHour, startMinute, endHour, endMinute } = timetable[i];
+  const startTime = new Date();
+  startTime.setHours(startHour);
+  startTime.setMinutes(startMinute);
+  const endTime = new Date();
+  endTime.setHours(endHour);
+  endTime.setMinutes(endMinute);
+
+  if (currentTime >= startTime && currentTime < endTime) {
+    currentEvent = i;
+    isBreak = false;
+    break;
+  } else if (currentTime < startTime) {
+    nextEvent = i;
+    isBreak = true;
+    break;
   }
 }
 
-function getClass(hour, minute) {
-  for (let i = 0; i < timetable.length; i++) {
-    const classStartTime = timetable[i];
-    oraszam.innerText = i + ". óra";
-    if (
-      hour > classStartTime.startHour ||
-      (hour === classStartTime.startHour && minute >= classStartTime.startMinute)
-    ) {
-      if (
-        hour < classStartTime.endHour ||
-        (hour === classStartTime.endHour && minute < classStartTime.endMinute)
-      ) {
-        return classStartTime;
-      }
-    }
-  }
+const oraszamElement = document.getElementById('oraszam');
 
-  return null;
+if (currentEvent !== null) {
+  oraszamElement.textContent = `${currentEvent}. óra`;
+} else if (nextEvent !== null) {
+  oraszamElement.textContent = 'Szünet';
+} else {
+  oraszamElement.style.display = 'none';
 }
 
-function getNextClass(hour, minute) {
-  for (let i = 0; i < timetable.length; i++) {
-    const classStartTime = timetable[i];
-    if (
-      hour < classStartTime.startHour ||
-      (hour === classStartTime.startHour && minute < classStartTime.startMinute)
-    ) {
-      return classStartTime;
-    }
-  }
+const csengoigElement = document.getElementById('csengoig');
 
-  return null;
+if (currentEvent !== null) {
+  const { endHour, endMinute } = timetable[currentEvent];
+  const endTime = new Date();
+  endTime.setHours(endHour);
+  endTime.setMinutes(endMinute);
+  const timeRemaining = Math.max(0, endTime - currentTime);
+  const minutesRemaining = Math.ceil(timeRemaining / (1000 * 60));
+  csengoigElement.textContent = `${minutesRemaining} perc múlva ér véget`;
+} else if (nextEvent !== null) {
+  const { startHour, startMinute } = timetable[nextEvent];
+  const startTime = new Date();
+  startTime.setHours(startHour);
+  startTime.setMinutes(startMinute);
+  const timeRemaining = Math.max(0, startTime - currentTime);
+  const minutesRemaining = Math.ceil(timeRemaining / (1000 * 60));
+  csengoigElement.textContent = `${minutesRemaining} perc múlva kezdődik`;
+} else {
+  csengoigElement.textContent = 'Nincs több óra ma.';
 }
-
-function getClassEndTime(classTime) {
-  const { endHour, endMinute } = classTime;
-  return new Date().setHours(endHour, endMinute);
-}
-
-function getNextClassStartTime(classTime) {
-  const { startHour, startMinute } = classTime;
-  return new Date().setHours(startHour, startMinute);
-}
-
-function getTimeRemaining(startTime, endTime) {
-  const differenceInMinutes = Math.floor((endTime - startTime) / (1000 * 60));
-  return differenceInMinutes;
-}
-
-// Call updateTime every second to keep the text updated
-setInterval(updateTime, 1000);
