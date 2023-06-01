@@ -54,7 +54,7 @@ function updateElements() {
   const oraszamElement = document.getElementById('oraszam');
 
   if (currentEvent !== null) {
-    oraszamElement.textContent = `${currentEvent + 1}. óra`;
+    oraszamElement.textContent = `${currentEvent}. óra`;
   } else if (nextEvent !== null) {
     oraszamElement.textContent = 'Szünet';
   } else {
